@@ -1,26 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider, createGlobalStyle } from 'styled-components';
 
-function App() {
+import Login from './public/login/login';
+import Sport from './private/sport';
+import History from './private/history-sport';
+
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    background-color: ${props => props.theme.background};
+    color: ${props => props.theme.text};
+    transition: background-color 0.3s ease;
+  }
+`;
+
+const lightTheme = {
+  background: '#ffffff',
+  text: '#000000',
+  primary: 'blue',
+};
+
+const darkTheme = {
+  background: '#000000',
+  text: '#ffffff',
+  primary: 'red',
+};
+
+const App = () => {
+  const [theme, setTheme] = useState(lightTheme);
+
+  const toggleTheme = () => {
+    setTheme(theme === lightTheme ? darkTheme : lightTheme);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <div>
+        <button onClick={toggleTheme}>Cambiar Tema</button>
+      </div>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/sport" element={<Sport />} />
+          <Route path="/history" element={<History />} />
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
